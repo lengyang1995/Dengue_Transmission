@@ -33,7 +33,6 @@ for(j in 1:180)
   }
 }
 ############### find the best parameters, K can be chosen from any value
-library(stats)
 library(doParallel)
 library(parallel)
 library(foreach)
@@ -41,7 +40,6 @@ num_cores = detectCores()
 cl = makeCluster(num_cores)
 registerDoParallel(cl)
 K=10000
-########################## find the best parameters and you can choose your own K
 ress1 = foreach(iter = 1:K,.combine='rbind')%dopar%{
   k=sample(c(4:30),1)
   i4= sample(c(14:180),1)
@@ -118,7 +116,7 @@ ress1 = foreach(iter = 1:K,.combine='rbind')%dopar%{
 stopCluster(cl)
 ress1[which.min(ress1[,1]),]
 
-######## Those are the best parameters from our analysis
+######## Those are the best parameters from our simulation
 i4= 178
 i5=    146
 thre1=   1.299e+03
@@ -179,7 +177,8 @@ obj = function(beta)
 est.b = optim(beta, obj,method="CG")
 beta = est.b$par
 
-############ re-estimated parameters based on multi-step prediction
+##################################### draw graph and see the fitting, which is pretty good.
+
 y=crcase[1:k]
 for(i in (k+1):length(crcase))
 {
@@ -192,8 +191,6 @@ for(i in (k+1):length(crcase))
   y[i]=min(2*max(crcase),y[i])
 }
 
-
-####################### draw graph and see the fitting, which is pretty good.
 plot(crcase)
 lines(y,col='red')
 
